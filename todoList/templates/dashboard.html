@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
+    <title>Todo App</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.5.0/dist/semantic.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.5.0/dist/semantic.min.js"></script>
+    <a class="ui blue button right floated" href="/logout">Logout</a>
+</head>
+
+<body>
+
+    <div style="margin-top: 50px ;" class="ui container">
+    <h1  class="ui center aligned header">To Do App</h1>
+
+    <form class="ui form" action="/add" method="get">
+        <div class="field">
+            <label for="title">Your todo list, {{username}}</label>
+            <input type="text" name="title" placeholder="Enter todo ..">
+            <br>
+            <button class="ui blue button" type="submit">Add</button>
+        </div>
+    </form>
+    {{#repo}}
+    <div class="ui segment">
+        <p class="ui big header">{{name}}
+            {{#completed}}
+            <i class="green checkmark icon"></i>
+            {{/completed}}
+        </p>
+        <a class="ui blue button" href="/update/{{ name }}">Update</a>
+        <a class="ui red button" href="/delete/{{ name }}">Delete</a>
+    </div>
+    {{/repo}}
+
+</div>
+</body>
+
+</html>

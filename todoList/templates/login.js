@@ -1,0 +1,30 @@
+function submitForm() {
+const username = document.getElementById("username").value;
+const password = document.getElementById("password").value;
+
+// Combine username and password and encode in base64
+const credentials = btoa(`${username}:${password}`);
+
+// Prepare headers for the POST request
+const headers = new Headers();
+headers.append("Authorization", `Basic ${credentials}`);
+headers.append("Content-Type", "application/json");
+
+    // Make a fetch request with the Authorization header
+    fetch("/login", {
+        method: "POST",
+        headers: headers,
+        credentials: 'include'
+    })
+    .then(response => {
+        if (response.ok) {
+            window.location.replace("http://localhost:18080/dashboard");
+        } else {
+            // Handle authentication failure or other errors
+            alert("Wrong Password");
+        }
+    })
+    .catch(error => {
+        console.error("Error:", error);
+    });
+}
