@@ -63,7 +63,7 @@ int main()
         .allow_credentials()
         .headers("*", "Content-Type", "Authorization");*/
 
-    ExpirationCache<string, string, 60*60> session;
+    ExpirationCache<string, string, SESSION_TIME> session;
 
     CROW_ROUTE(app, "/dashboard")
         ([&](const crow::request& req) {
@@ -73,7 +73,7 @@ int main()
             return redirect("/");
         }
         string username = getUserFromCookie(ctx);
-        json data = parseJson(username + REPOPOKUS);
+        json data = parseJson(username + REPOJ);
         auto rv = crow::json::load(data.dump());
         crow::mustache::context x{ rv };
         x["username"] = username;
@@ -94,7 +94,7 @@ int main()
             ctx.set_cookie("session", cookie_value)
                 .path("/")
                 .secure()
-                .max_age(60 * 60)
+                .max_age(SESSION_TIME)
                 .same_site(crow::CookieParser::Cookie::SameSitePolicy::None);
             return crow::response(200);
         }
@@ -174,8 +174,7 @@ int main()
             return redirect("/");
         }
         string username = getUserFromCookie(ctx);
-        json data = parseJson(username + REPOPOKUS);
-        //crow::json::wvalue wv = crow::json::load(data.dump());
+        json data = parseJson(username + REPOJ);
         return crow::response(data.dump());
             });
 

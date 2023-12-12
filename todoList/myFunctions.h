@@ -8,9 +8,10 @@ using json = nlohmann::json;
 #define USERSJ "users.json"
 #define USERNAME 1
 #define PASSWORD 2
-#define REPOJ "repo.json"
-#define REPOPOKUS "_repo.json"
+#define REPOJ "_repo.json"
+//#define REPOPOKUS "_repo.json"
 #define NULL_VAL "NULL"
+#define SESSION_TIME 900
 
 json parseJson(std::string file) {
     ifstream json_file(file);
@@ -77,7 +78,7 @@ string getSessionFromCookie(crow::CookieParser::context& ctx) {
     return session_id;
 }
 
-bool checkCookie(crow::CookieParser::context &ctx, ExpirationCache<std::string, std::string, 60*60>& session) {
+bool checkCookie(crow::CookieParser::context &ctx, ExpirationCache<std::string, std::string, SESSION_TIME>& session) {
     if (ctx.get_cookie("session").empty()) {
         return true;
     }
@@ -102,7 +103,7 @@ bool checkCookie(crow::CookieParser::context &ctx, ExpirationCache<std::string, 
 void updateTask(const string& username, string& todo_name) {
     boost::replace_all(todo_name, "%20", " ");
     // Read JSON data from file
-    string filename = username + REPOPOKUS;
+    string filename = username + REPOJ;
     ifstream ifs(filename);
     json data_json;
     ifs >> data_json;
@@ -123,7 +124,7 @@ void updateTask(const string& username, string& todo_name) {
 void deleteTask(const string& username, string& todo_name) {
     boost::replace_all(todo_name, "%20", " ");
     // Read JSON data from file
-    string filename = username + REPOPOKUS;
+    string filename = username + REPOJ;
     ifstream ifs(filename);
     json data_json;
     ifs >> data_json;
@@ -148,7 +149,7 @@ void addTask(const std::string& username, std::string& todo_name) {
         {"name", sanitized_name}
     };
 
-    std::string filename = username + REPOPOKUS;
+    std::string filename = username + REPOJ;
 
     // Read existing JSON data
     std::ifstream ifs(filename);
