@@ -3,7 +3,8 @@
 #include "crow_all.h"
 #include "json.hpp"
 #include "myFunctions.h"
-#include "hash-library/sha256.h"
+#include "sha256.h"
+#include "sha256.cpp"
 #include <random>
 #include "ExpirationCache.h"
 
@@ -34,7 +35,10 @@ int main()
     cors
         .global()
         .methods("POST"_method, "GET"_method, "OPTIONS"_method)
-        .prefix("/login")
+        .origin("http://127.0.0.1:8080")
+        .allow_credentials()
+        .headers("*", "Content-Type", "Authorization");
+        /*.prefix("/login")
         .origin("http://127.0.0.1:8080")
         .allow_credentials()
         .headers("*", "Content-Type", "Authorization")
@@ -57,7 +61,7 @@ int main()
         .prefix("/")
         .origin("http://127.0.0.1:8080")
         .allow_credentials()
-        .headers("*", "Content-Type", "Authorization");
+        .headers("*", "Content-Type", "Authorization");*/
 
     ExpirationCache<string, string, 60*60> session;
 
@@ -113,6 +117,10 @@ int main()
     CROW_ROUTE(app, "/update/<string>")
         ([&](const crow::request& req, string todo_name) {
         auto& ctx = app.get_context<crow::CookieParser>(req);
+        if (checkCookie(ctx, session)) {
+            auto page = crow::mustache::load("login.html");
+            return redirect("/");
+        }
         string username = getUserFromCookie(ctx);
         updateTask(username, todo_name);
         auto page = crow::mustache::load("dashboard.html");
@@ -122,6 +130,10 @@ int main()
     CROW_ROUTE(app, "/delete/<string>")
         ([&](const crow::request& req, string todo_name) {
         auto& ctx = app.get_context<crow::CookieParser>(req);
+        if (checkCookie(ctx, session)) {
+            auto page = crow::mustache::load("login.html");
+            return redirect("/");
+        }
         string username = getUserFromCookie(ctx);
         deleteTask(username, todo_name);
         auto page = crow::mustache::load("dashboard.html");
@@ -131,6 +143,10 @@ int main()
     CROW_ROUTE(app, "/add")
         ([&](const crow::request& req) {
         auto& ctx = app.get_context<crow::CookieParser>(req);
+        if (checkCookie(ctx, session)) {
+            auto page = crow::mustache::load("login.html");
+            return redirect("/");
+        }
         string username = getUserFromCookie(ctx);
         string todo_name = req.url_params.get("title");
         addTask(username, todo_name);
@@ -141,9 +157,26 @@ int main()
     CROW_ROUTE(app, "/logout")
         ([&](const crow::request& req) {
         auto& ctx = app.get_context<crow::CookieParser>(req);
+        if (checkCookie(ctx, session)) {
+            auto page = crow::mustache::load("login.html");
+            return redirect("/");
+        }
         string session_id = getSessionFromCookie(ctx);
         session.Put(session_id, NULL_VAL);
         return redirect("/");
+            });
+
+    CROW_ROUTE(app, "/json")
+        ([&](const crow::request& req) {
+        auto& ctx = app.get_context<crow::CookieParser>(req);
+        if (checkCookie(ctx, session)) {
+            auto page = crow::mustache::load("login.html");
+            return redirect("/");
+        }
+        string username = getUserFromCookie(ctx);
+        json data = parseJson(username + REPOPOKUS);
+        //crow::json::wvalue wv = crow::json::load(data.dump());
+        return crow::response(data.dump());
             });
 
     CROW_CATCHALL_ROUTE(app)

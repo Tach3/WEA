@@ -2,15 +2,15 @@
     "repo": [
         {
             "completed": true,
-            "name": "TODO 4"
-        },
-        {
-            "completed": true,
             "name": "pokus"
         },
         {
-            "completed": false,
+            "completed": true,
             "name": "task27"
+        },
+        {
+            "completed": false,
+            "name": "treba kupit mlieko"
         }
     ]
 }

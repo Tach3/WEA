@@ -7,6 +7,10 @@
         {
             "completed": true,
             "name": "update sql protection"
+        },
+        {
+            "completed": true,
+            "name": "updated add"
         }
     ]
 }

@@ -1,5 +1,5 @@
 #pragma once
-#include "hash-library/sha256.h"
+#include "sha256.h"
 #include "ExpirationCache.h"
 #include <regex>
 using namespace std;
@@ -142,7 +142,7 @@ void deleteTask(const string& username, string& todo_name) {
 
 void addTask(const std::string& username, std::string& todo_name) {
     std::regex pattern("[^a-zA-Z0-9]");
-    string sanitized_name = std::regex_replace(todo_name, pattern, "");
+    string sanitized_name = std::regex_replace(todo_name, pattern, " ");
     json task = {
         {"completed", false},
         {"name", sanitized_name}
