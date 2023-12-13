@@ -19,6 +19,7 @@ json parseJson(std::string file) {
     json_file >> data;
     return data;
 }
+
 //bool to check authentication
 bool authenticate(const string &username, string &password, json &data) {
     SHA256 sha256;
@@ -30,6 +31,7 @@ bool authenticate(const string &username, string &password, json &data) {
     }
     return false;
 }
+
 //helper function to separate and decode base64 username:password
 string separateAuth(crow::request req, int returnable) {
     string myauth = req.get_header_value("Authorization");
@@ -45,6 +47,7 @@ string separateAuth(crow::request req, int returnable) {
         return "wrong hash lmao";
     }
 }
+
 //authenticates user based on username and password
 bool authentication(crow::request req) {
     std::string username = separateAuth(req, USERNAME);
@@ -57,6 +60,7 @@ bool authentication(crow::request req) {
         return false;
     }
 }
+
 //generates session id using sha256
 string generateSessionId() {
     SHA256 sha256;
@@ -65,6 +69,7 @@ string generateSessionId() {
     string sessionId = sha256(random_number);
     return sessionId;
 }
+
 //gets username from cookie
 string getUserFromCookie(crow::CookieParser::context& ctx) {
     string cookie_id = ctx.get_cookie("session");
@@ -72,6 +77,7 @@ string getUserFromCookie(crow::CookieParser::context& ctx) {
     string user_id = cookie_id.substr(found + 1);
     return user_id;
 }
+
 //gets session id from cookie
 string getSessionFromCookie(crow::CookieParser::context& ctx) {
     string cookie_id = ctx.get_cookie("session");
@@ -79,6 +85,7 @@ string getSessionFromCookie(crow::CookieParser::context& ctx) {
     string session_id = cookie_id.substr(0, found);
     return session_id;
 }
+
 //checks from cookie if session is valid
 bool checkCookie(crow::CookieParser::context &ctx, ExpirationCache<std::string, std::string, SESSION_TIME>& session) {
     if (ctx.get_cookie("session").empty()) {
@@ -122,6 +129,7 @@ void updateTask(const string& username, string& todo_name) {
         }
     }
 }
+
 //deletes task
 void deleteTask(const string& username, string& todo_name) {
     boost::replace_all(todo_name, "%20", " ");
@@ -135,14 +143,23 @@ void deleteTask(const string& username, string& todo_name) {
         return item["name"] == todo_name;
     });
 
-    repo.erase(it);
+    
+    try
+    {
+        repo.erase(it);
+    }
+    catch (exception e)
+    {
+        cout << e.what() << endl;
+    }
 
     // Write the updated JSON data back to the file
     ofstream ofs(filename);
 
     ofs << data_json.dump(4) << endl;
 }
-//adds a task
+
+//adds a task, sanitizes with regex
 void addTask(const std::string& username, std::string& todo_name) {
     std::regex pattern("[^a-zA-Z0-9]");
     string sanitized_name = std::regex_replace(todo_name, pattern, " ");

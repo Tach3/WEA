@@ -1,3 +1,10 @@
+/*
+THIS IS ALTERED EXPIRATION CACHE
+GCC HAD A PROBLEM WITH FRIEND CLASS SO I SLIGHTLY ALTERED IT
+YOU CAN GET THE ORIGINAL CODE AT https://github.com/zapredelom/expirationCache/tree/master
+*/
+
+
 #pragma once
 #include <chrono>
 #include <map>
