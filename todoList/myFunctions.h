@@ -9,17 +9,17 @@ using json = nlohmann::json;
 #define USERNAME 1
 #define PASSWORD 2
 #define REPOJ "_repo.json"
-//#define REPOPOKUS "_repo.json"
 #define NULL_VAL "NULL"
 #define SESSION_TIME 900
 
+//parses json file
 json parseJson(std::string file) {
     ifstream json_file(file);
     json data;
     json_file >> data;
     return data;
 }
-
+//bool to check authentication
 bool authenticate(const string &username, string &password, json &data) {
     SHA256 sha256;
     password = sha256(password);
@@ -30,7 +30,7 @@ bool authenticate(const string &username, string &password, json &data) {
     }
     return false;
 }
-
+//helper function to separate and decode base64 username:password
 string separateAuth(crow::request req, int returnable) {
     string myauth = req.get_header_value("Authorization");
     string mycreds = myauth.substr(6);
@@ -45,7 +45,7 @@ string separateAuth(crow::request req, int returnable) {
         return "wrong hash lmao";
     }
 }
-
+//authenticates user based on username and password
 bool authentication(crow::request req) {
     std::string username = separateAuth(req, USERNAME);
     std::string password = separateAuth(req, PASSWORD);
@@ -57,7 +57,7 @@ bool authentication(crow::request req) {
         return false;
     }
 }
-
+//generates session id using sha256
 string generateSessionId() {
     SHA256 sha256;
     srand(time(NULL));  // Seed the random number generator with the current time
@@ -65,21 +65,21 @@ string generateSessionId() {
     string sessionId = sha256(random_number);
     return sessionId;
 }
-
+//gets username from cookie
 string getUserFromCookie(crow::CookieParser::context& ctx) {
     string cookie_id = ctx.get_cookie("session");
     size_t found = cookie_id.find('=');
     string user_id = cookie_id.substr(found + 1);
     return user_id;
 }
-
+//gets session id from cookie
 string getSessionFromCookie(crow::CookieParser::context& ctx) {
     string cookie_id = ctx.get_cookie("session");
     size_t found = cookie_id.find('=');
     string session_id = cookie_id.substr(0, found);
     return session_id;
 }
-
+//checks from cookie if session is valid
 bool checkCookie(crow::CookieParser::context &ctx, ExpirationCache<std::string, std::string, SESSION_TIME>& session) {
     if (ctx.get_cookie("session").empty()) {
         return true;
@@ -101,7 +101,7 @@ bool checkCookie(crow::CookieParser::context &ctx, ExpirationCache<std::string, 
     return true;
 }
 
-
+//updates task from complete to incomplete and vice versa
 void updateTask(const string& username, string& todo_name) {
     boost::replace_all(todo_name, "%20", " ");
     // Read JSON data from file
@@ -122,7 +122,7 @@ void updateTask(const string& username, string& todo_name) {
         }
     }
 }
-
+//deletes task
 void deleteTask(const string& username, string& todo_name) {
     boost::replace_all(todo_name, "%20", " ");
     // Read JSON data from file
@@ -142,7 +142,7 @@ void deleteTask(const string& username, string& todo_name) {
 
     ofs << data_json.dump(4) << endl;
 }
-
+//adds a task
 void addTask(const std::string& username, std::string& todo_name) {
     std::regex pattern("[^a-zA-Z0-9]");
     string sanitized_name = std::regex_replace(todo_name, pattern, " ");
