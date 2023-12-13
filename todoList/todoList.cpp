@@ -41,6 +41,7 @@ int main()
 
     ExpirationCache<string, string, SESSION_TIME> session;
 
+    //dashboard endpoint
     CROW_ROUTE(app, "/dashboard")
         ([&](const crow::request& req) {
         auto& ctx = app.get_context<crow::CookieParser>(req);
@@ -57,6 +58,7 @@ int main()
         return crow::response(page.render(x));
             });
 
+    //login auth endpoint
     CROW_ROUTE(app, "/login").methods("POST"_method)
         ([&](const crow::request& req) {
         if (authentication(req)) {
@@ -78,12 +80,14 @@ int main()
         return crow::response(401);
             });
 
+    //index route
     CROW_ROUTE(app, "/")
         ([&](const crow::request& req) {
         auto page = crow::mustache::load("login.html");
         return page.render();
             });
-
+    
+    //javascript for login route -- so no inline script is needed
     CROW_ROUTE(app, "/script")
         ([&](const crow::request& req) {
         crow::response res;
@@ -91,6 +95,7 @@ int main()
         return res;
             });
 
+    //update route /update/task_name
     CROW_ROUTE(app, "/update/<string>")
         ([&](const crow::request& req, string todo_name) {
         auto& ctx = app.get_context<crow::CookieParser>(req);
@@ -104,6 +109,7 @@ int main()
         return redirect("/dashboard");
             });
 
+    //delete route /delete/task_name
     CROW_ROUTE(app, "/delete/<string>")
         ([&](const crow::request& req, string todo_name) {
         auto& ctx = app.get_context<crow::CookieParser>(req);
@@ -117,6 +123,7 @@ int main()
         return redirect("/dashboard");
             });
 
+    //add route add task, name is from title part of request
     CROW_ROUTE(app, "/add")
         ([&](const crow::request& req) {
         auto& ctx = app.get_context<crow::CookieParser>(req);
@@ -131,6 +138,7 @@ int main()
         return redirect("/dashboard");
             });
 
+    //logout route, erases session from server session cache
     CROW_ROUTE(app, "/logout")
         ([&](const crow::request& req) {
         auto& ctx = app.get_context<crow::CookieParser>(req);
@@ -143,6 +151,7 @@ int main()
         return redirect("/");
             });
 
+    //json route, returns users repo as json
     CROW_ROUTE(app, "/json")
         ([&](const crow::request& req) {
         auto& ctx = app.get_context<crow::CookieParser>(req);
@@ -155,6 +164,7 @@ int main()
         return crow::response(data.dump());
             });
 
+    //route for everything else/not defined
     CROW_CATCHALL_ROUTE(app)
     ([](crow::response& res) {
         if (res.code == 404){
@@ -165,6 +175,8 @@ int main()
         }
         res.end();
         });
+
+
     char* port = std::getenv("PORT");
     uint16_t iPort = static_cast<uint16_t>(port != NULL ? stoi(port) : 18080);
     std::cout << "Port: " << iPort << endl;
