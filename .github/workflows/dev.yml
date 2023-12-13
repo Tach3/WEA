@@ -1,0 +1,27 @@
+name: build and test crow dev
+
+on:
+  push:
+    branches: [ dev ]
+
+jobs:
+  build-and-test:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v1
+
+    - name: Install Visual Studio 2019 Build Tools
+      uses: microsoft/setup-msbuild@v1.0.2
+      id: setup_msbuild
+    
+    - name: Restore NuGet packages
+      id: restore_nuget
+      working-directory: ./crow
+      run: nuget restore crow.sln
+    
+    - name: Run MSBuild
+      id: run_msbuild
+      working-directory: ./crow
+      run: msbuild crow.sln
