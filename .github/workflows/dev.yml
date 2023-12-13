@@ -2,7 +2,7 @@ name: build and test crow dev
 
 on:
   push:
-    branches: [ dev ]
+    branches: [ main ]
 
 jobs:
   build-and-test:
