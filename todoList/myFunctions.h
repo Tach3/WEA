@@ -151,7 +151,7 @@ void addTask(const std::string& username, std::string& todo_name) {
         {"name", sanitized_name}
     };
 
-    std::string filename = username + REPOJ;
+    string filename = username + REPOJ;
 
     // Read existing JSON data
     std::ifstream ifs(filename);
@@ -165,8 +165,8 @@ void addTask(const std::string& username, std::string& todo_name) {
         // Write the new JSON data to the file
         std::ofstream ofs(filename);
         if (ofs.is_open()) {
-            ofs << data_json.dump(4) << std::endl;
-            std::cout << "Task added successfully." << std::endl;
+            ofs << data_json.dump(4) << endl;
+            cout << "Task added successfully." << endl;
         }
         else {
             std::cerr << "Error opening file for writing: " << filename << std::endl;
@@ -186,10 +186,10 @@ void addTask(const std::string& username, std::string& todo_name) {
     std::ofstream ofs(filename);
     if (ofs.is_open()) {
         ofs << data_json.dump(4) << std::endl;
-        std::cout << "Task added successfully." << std::endl;
+        cout << "Task added successfully." << endl;
     }
     else {
-        std::cerr << "Error opening file for writing: " << filename << std::endl;
+        cerr << "Error opening file for writing: " << filename << endl;
     }
 }
 

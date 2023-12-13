@@ -38,30 +38,6 @@ int main()
         .origin("https://todoapp-a7a9f5a0e861.herokuapp.com")
         .allow_credentials()
         .headers("*", "Content-Type", "Authorization");
-        /*.prefix("/login")
-        .origin("http://127.0.0.1:8080")
-        .allow_credentials()
-        .headers("*", "Content-Type", "Authorization")
-        .prefix("/dashboard")
-        .origin("http://127.0.0.1:8080")
-        .allow_credentials()
-        .headers("*", "Content-Type", "Authorization")
-        .prefix("/add")
-        .origin("http://127.0.0.1:8080")
-        .allow_credentials()
-        .headers("*", "Content-Type", "Authorization")
-        .prefix("/update")
-        .origin("http://127.0.0.1:8080")
-        .allow_credentials()
-        .headers("*", "Content-Type", "Authorization")
-        .prefix("/delete")
-        .origin("http://127.0.0.1:8080")
-        .allow_credentials()
-        .headers("*", "Content-Type", "Authorization")
-        .prefix("/")
-        .origin("http://127.0.0.1:8080")
-        .allow_credentials()
-        .headers("*", "Content-Type", "Authorization");*/
 
     ExpirationCache<string, string, SESSION_TIME> session;
 
@@ -95,7 +71,8 @@ int main()
                 .path("/")
                 .secure()
                 .max_age(SESSION_TIME)
-                .same_site(crow::CookieParser::Cookie::SameSitePolicy::None);
+                .same_site(crow::CookieParser::Cookie::SameSitePolicy::None)
+                .httponly();
             return crow::response(200);
         }
         return crow::response(401);
@@ -181,10 +158,10 @@ int main()
     CROW_CATCHALL_ROUTE(app)
     ([](crow::response& res) {
         if (res.code == 404){
-            res.body = "Wrong URL, bitch.";
+            res.body = "This seems to be the wrong url/endpoint.";
         }
         else if (res.code == 405){
-            res.body = "The HTTP method does not seem to be correct/allowed. Go fuck yourself.";
+            res.body = "The HTTP method does not seem to be correct/allowed.";
         }
         res.end();
         });
