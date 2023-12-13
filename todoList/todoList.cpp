@@ -35,7 +35,7 @@ int main()
     cors
         .global()
         .methods("POST"_method, "GET"_method, "OPTIONS"_method)
-        .origin("http://127.0.0.1:8080")
+        .origin("https://todoapp-a7a9f5a0e861.herokuapp.com")
         .allow_credentials()
         .headers("*", "Content-Type", "Authorization");
         /*.prefix("/login")
