@@ -18,7 +18,7 @@ headers.append("Content-Type", "application/json");
     })
     .then(response => {
         if (response.ok) {
-            window.location.replace("http://localhost:18080/dashboard");
+            window.location.replace("https://todoapp-a7a9f5a0e861.herokuapp.com/dashboard");
         } else {
             // Handle authentication failure or other errors
             alert("Wrong Password");
