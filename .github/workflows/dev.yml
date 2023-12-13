@@ -1,8 +1,8 @@
-name: build todoList main
+name: build todoList dev
 
 on:
   push:
-    branches: [ main ]
+    branches: [ dev ]
 
 jobs:
   build-and-test:

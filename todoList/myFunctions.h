@@ -41,6 +41,8 @@ string separateAuth(crow::request req, int returnable) {
         return d_mycreds.substr(0, found);
     case PASSWORD:
         return d_mycreds.substr(found + 1);
+    default:
+        return "wrong hash lmao";
     }
 }
 
