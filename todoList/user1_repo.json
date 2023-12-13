@@ -1,7 +1,7 @@
 {
     "repo": [
         {
-            "completed": true,
+            "completed": false,
             "name": "update xss"
         },
         {
