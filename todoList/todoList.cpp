@@ -188,7 +188,10 @@ int main()
         }
         res.end();
         });
-    app.port(18080).multithreaded().run();
+    char* port = std::getenv("PORT");
+    uint16_t iPort = static_cast<uint16_t>(port != NULL ? stoi(port) : 18080);
+    std::cout << "Port: " << iPort << endl;
+    app.port(iPort).multithreaded().run();
 }
 
 
