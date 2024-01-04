@@ -1,7 +1,16 @@
 {
-  "repo": [
-    { "name": "TODO 7", "completed": false },
-    { "name": "TODO 8", "completed": true },
-    { "name": "TODO 9", "completed": false }
-  ]
+    "repo": [
+        {
+            "completed": true,
+            "name": "TODO 7"
+        },
+        {
+            "completed": true,
+            "name": "TODO 8"
+        },
+        {
+            "completed": false,
+            "name": "TODO 9"
+        }
+    ]
 }
