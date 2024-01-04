@@ -8,7 +8,7 @@ const credentials = btoa(`${username}:${password}`);
 // Prepare headers for the POST request
 const headers = new Headers();
 headers.append("Authorization", `Basic ${credentials}`);
-headers.append("Content-Type", "application/json");
+headers.append("Content-Type", "application/x-www-form-urlencoded");
 
     // Make a fetch request with the Authorization header
     fetch("/login", {
@@ -18,7 +18,7 @@ headers.append("Content-Type", "application/json");
     })
     .then(response => {
         if (response.ok) {
-            window.location.replace("https://todoapp-a7a9f5a0e861.herokuapp.com/dashboard");
+            window.location.replace("http://localhost:18080/dashboard");
         } else {
             // Handle authentication failure or other errors
             alert("Wrong Password");

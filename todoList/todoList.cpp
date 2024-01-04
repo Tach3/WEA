@@ -35,7 +35,7 @@ int main()
     cors
         .global()
         .methods("POST"_method, "GET"_method, "OPTIONS"_method)
-        .origin("https://todoapp-a7a9f5a0e861.herokuapp.com")
+        .origin("http://localhost:18080/")
         .allow_credentials()
         .headers("*", "Content-Type", "Authorization");
 
@@ -88,10 +88,18 @@ int main()
             });
     
     //javascript for login route -- so no inline script is needed
-    CROW_ROUTE(app, "/script")
+    CROW_ROUTE(app, "/login-script")
         ([&](const crow::request& req) {
         crow::response res;
         res.set_static_file_info("templates/login.js");
+        return res;
+            });
+
+    //javascript for change route -- so no inline script is needed
+    CROW_ROUTE(app, "/change-script")
+        ([&](const crow::request& req) {
+        crow::response res;
+        res.set_static_file_info("templates/change.js");
         return res;
             });
 
@@ -102,7 +110,7 @@ int main()
         if (checkCookie(ctx, session)) {
             auto page = crow::mustache::load("login.html");
             return redirect("/");
-        }
+        }       
         string username = getUserFromCookie(ctx);
         updateTask(username, todo_name);
         auto page = crow::mustache::load("dashboard.html");
@@ -121,6 +129,21 @@ int main()
         deleteTask(username, todo_name);
         auto page = crow::mustache::load("dashboard.html");
         return redirect("/dashboard");
+            });
+
+    //change route /change/task_name
+    CROW_ROUTE(app, "/change").methods("POST"_method)
+        ([&](const crow::request& req) {
+        auto& ctx = app.get_context<crow::CookieParser>(req);
+        if (checkCookie(ctx, session)) {
+            auto page = crow::mustache::load("login.html");
+            return redirect("/");
+        }
+        string username = getUserFromCookie(ctx);
+        if (changeTask(username, req)) {
+            return crow::response(200);
+        }
+        return crow::response(401);
             });
 
     //add route add task, name is from title part of request
