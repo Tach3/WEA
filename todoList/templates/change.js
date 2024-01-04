@@ -43,3 +43,19 @@ function saveEditedName() {
   // Close the modal after saving
   $('#editModal').modal('hide');
 }
+
+$(document).ready(function () {
+    $('.ui.dropdown').dropdown();
+});
+
+function filterTasks(status) {
+    const tasks = document.querySelectorAll('.task');
+    tasks.forEach(task => {
+        const completed = task.classList.contains('completed');
+        if (status === 'all' || (status === 'completed' && completed) || (status === 'notCompleted' && !completed)) {
+            task.style.display = 'block';
+        } else {
+            task.style.display = 'none';
+        }
+    });
+}
