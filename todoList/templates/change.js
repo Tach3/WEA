@@ -31,7 +31,7 @@ function saveEditedName() {
   })
   .then(response => {
       if (response.ok) {
-          window.location.replace("http://localhost:18080/dashboard");
+          window.location.replace("https://todoapp-a7a9f5a0e861.herokuapp.com/dashboard");
       } else {
           // Handle errors, for example, if the item couldn't be changed
           alert("Failed to change item");
