@@ -1,14 +1,16 @@
+document.getElementById("loginButton").addEventListener("click", submitForm);
+
 function submitForm() {
-const username = document.getElementById("username").value;
-const password = document.getElementById("password").value;
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
 
-// Combine username and password and encode in base64
-const credentials = btoa(`${username}:${password}`);
+    // Combine username and password and encode in base64
+    const credentials = btoa(`${username}:${password}`);
 
-// Prepare headers for the POST request
-const headers = new Headers();
-headers.append("Authorization", `Basic ${credentials}`);
-headers.append("Content-Type", "application/x-www-form-urlencoded");
+    // Prepare headers for the POST request
+    const headers = new Headers();
+    headers.append("Authorization", `Basic ${credentials}`);
+    headers.append("Content-Type", "application/x-www-form-urlencoded");
 
     // Make a fetch request with the Authorization header
     fetch("/login", {

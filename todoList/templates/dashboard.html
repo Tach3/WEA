@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.5.0/dist/semantic.min.css">
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.5.0/dist/semantic.min.js"></script>
-    <script src="/change-script"></script>
     <a class="ui blue button right floated" href="/logout">Logout</a>
 </head>
 
@@ -23,9 +22,9 @@
         <i class="dropdown icon"></i>
         <div class="default text">Filter Tasks</div>
         <div class="menu">
-            <div class="item" data-value="all" onclick="filterTasks('all')">All Tasks</div>
-            <div class="item" data-value="completed" onclick="filterTasks('completed')">Completed Tasks</div>
-            <div class="item" data-value="notCompleted" onclick="filterTasks('notCompleted')">Incomplete Tasks</div>
+            <div class="item" data-value="all" id="filterAll">All Tasks</div>
+            <div class="item" data-value="completed" id="filterCompleted">Completed Tasks</div>
+            <div class="item" data-value="notCompleted" id="filterNotCompleted">Incomplete Tasks</div>
         </div>
     </div>
     <form class="ui form" action="/add" method="get">
@@ -46,7 +45,7 @@
         </p>
         <a class="ui blue button" href="/update/{{ name }}">Update</a>
         <a class="ui red button" href="/delete/{{ name }}">Delete</a>
-        <button class="ui teal button" onclick="showEditModal('{{ name }}')">Edit</button>
+        <button class="ui teal button" type="button" id="editButton" data-name="{{ name }}">Edit</button>
     </div>
     {{/repo}}
 
@@ -58,10 +57,11 @@
         </div>
       </div>
       <div class="actions">
-        <div class="ui button" onclick="closeEditModal()">Cancel</div>
-        <div class="ui teal button" onclick="saveEditedName()">Save</div>
+        <button class="ui button" type="button" id="closeModalButton">Cancel</button>
+        <button class="ui teal button" type="button" id="saveEditButton">Save</button>
       </div>
     </div>
 </div>
+<script src="/change-script"></script>
 </body>
 </html>
