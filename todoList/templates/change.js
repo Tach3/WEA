@@ -1,12 +1,16 @@
-document.getElementById("editButton").addEventListener("click", showEditModal);
-function showEditModal() {
-  // Set the current name in the input field
-  const currentName = editButton.getAttribute("data-name");
-  document.getElementById('editedName').value = currentName;
-  sessionStorage.setItem("currentName", currentName);
-  // Show the modal
-  $('#editModal').modal('show');
+document.getElementById("editButton").addEventListener("click", function() {
+    showEditModal(this); // Pass the button as a parameter
+});
+
+function showEditModal(editButton) {
+    // Set the current name in the input field
+    const currentName = editButton.getAttribute("data-name");
+    document.getElementById('editedName').value = currentName;
+    sessionStorage.setItem("currentName", currentName);
+    // Show the modal
+    $('#editModal').modal('show');
 }
+
 document.getElementById("closeModalButton").addEventListener("click", closeEditModal);
 function closeEditModal() {
   // Close the modal without saving
