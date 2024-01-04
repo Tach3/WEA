@@ -2,6 +2,7 @@
 #include "sha256.h"
 #include "ExpirationCache.h"
 #include <regex>
+#include <boost/algorithm/string/trim.hpp>
 using namespace std;
 using json = nlohmann::json;
 
@@ -141,16 +142,24 @@ void deleteTask(const string& username, string& todo_name) {
     auto& repo = data_json["repo"];
     auto it = std::find_if(repo.begin(), repo.end(), [&todo_name](const auto& item) {
         return item["name"] == todo_name;
-    });
+        });
 
-    
+
     try
     {
-        repo.erase(it);
+        if (it != repo.end())
+        {
+            repo.erase(it);
+        }
+        else
+        {
+            // Handle the case where the iterator is invalid
+            std::cerr << "task was not found." << std::endl;
+        }
     }
-    catch (exception e)
+    catch (const std::exception& e)
     {
-        cout << e.what() << endl;
+        std::cerr << "Caught exception: " << e.what() << std::endl;
     }
 
     // Write the updated JSON data back to the file
@@ -163,6 +172,7 @@ void deleteTask(const string& username, string& todo_name) {
 void addTask(const std::string& username, std::string& todo_name) {
     std::regex pattern("[^a-zA-Z0-9]");
     string sanitized_name = std::regex_replace(todo_name, pattern, " ");
+    boost::algorithm::trim(sanitized_name);
     json task = {
         {"completed", false},
         {"name", sanitized_name}
@@ -207,6 +217,40 @@ void addTask(const std::string& username, std::string& todo_name) {
     }
     else {
         cerr << "Error opening file for writing: " << filename << endl;
+    }
+}
+
+//changes task name
+bool changeTask(const std::string& username, const crow::request& req) {
+    try
+    {
+        json tasks = json::parse(req.body);
+        string currentName = tasks["currentName"];
+        string newName = tasks["editedName"];
+        std::regex pattern("[^a-zA-Z0-9]");
+        string sanitized_name = std::regex_replace(newName, pattern, " ");
+        boost::algorithm::trim(sanitized_name);
+        string filename = username + REPOJ;
+        ifstream ifs(filename);
+        json data_json;
+        ifs >> data_json;
+
+        // Toggle the completed status for an item with a specific name
+        for (auto& item : data_json["repo"]) {
+            if (item["name"] == currentName) {
+                // Toggle the completed status
+                item["name"] = sanitized_name;
+
+                // Write the updated JSON data back to the file
+                ofstream ofs(filename);
+                ofs << data_json.dump(4) << endl;
+            }
+        }
+        return true;
+    }
+    catch (exception e)
+    {
+        return false;
     }
 }
 

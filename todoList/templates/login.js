@@ -8,7 +8,7 @@ const credentials = btoa(`${username}:${password}`);
 // Prepare headers for the POST request
 const headers = new Headers();
 headers.append("Authorization", `Basic ${credentials}`);
-headers.append("Content-Type", "application/json");
+headers.append("Content-Type", "application/x-www-form-urlencoded");
 
     // Make a fetch request with the Authorization header
     fetch("/login", {
