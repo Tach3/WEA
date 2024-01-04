@@ -1,5 +1,11 @@
-document.getElementById("editButton").addEventListener("click", function() {
-    showEditModal(this); // Pass the button as a parameter
+// Get all elements with the class "editButton"
+const editButtons = document.querySelectorAll(".editButton");
+
+// Add click event listeners to each edit button
+editButtons.forEach(editButton => {
+    editButton.addEventListener("click", function() {
+        showEditModal(this); // Pass the button as a parameter
+    });
 });
 
 function showEditModal(editButton) {
@@ -10,6 +16,7 @@ function showEditModal(editButton) {
     // Show the modal
     $('#editModal').modal('show');
 }
+
 
 document.getElementById("closeModalButton").addEventListener("click", closeEditModal);
 function closeEditModal() {
