@@ -1,16 +1,18 @@
-function showEditModal(currentName) {
+document.getElementById("editButton").addEventListener("click", showEditModal);
+function showEditModal() {
   // Set the current name in the input field
+  const currentName = editButton.getAttribute("data-name");
   document.getElementById('editedName').value = currentName;
   sessionStorage.setItem("currentName", currentName);
   // Show the modal
   $('#editModal').modal('show');
 }
-
+document.getElementById("closeModalButton").addEventListener("click", closeEditModal);
 function closeEditModal() {
   // Close the modal without saving
   $('#editModal').modal('hide');
 }
-
+document.getElementById("saveEditButton").addEventListener("click", saveEditedName);
 function saveEditedName() {
   const currentName = sessionStorage.getItem("currentName");
   var editedName = document.getElementById('editedName').value;
@@ -59,3 +61,20 @@ function filterTasks(status) {
         }
     });
 }
+
+const filterAllButton = document.getElementById("filterAll");
+const filterCompletedButton = document.getElementById("filterCompleted");
+const filterNotCompletedButton = document.getElementById("filterNotCompleted");
+
+// Add click event listeners to the filter buttons
+filterAllButton.addEventListener("click", function() {
+    filterTasks('all');
+});
+
+filterCompletedButton.addEventListener("click", function() {
+    filterTasks('completed');
+});
+
+filterNotCompletedButton.addEventListener("click", function() {
+    filterTasks('notCompleted');
+});
