@@ -184,12 +184,28 @@ int main()
         }
         string username = getUserFromCookie(ctx);
         json data = parseJson(username + REPOJ);
-        return crow::response(data.dump());
+        crow::response res(data.dump());
+        res.add_header("Content-Type", "application/json");
+        return res;
+            });
+
+    //json endpoint just for application testing, easily removed
+    CROW_ROUTE(app, "/json/<string>")
+        ([&](const crow::request& req, string username) {
+        json data;
+        try {
+            data = parseJson(username + REPOJ);
+        }
+        catch (exception e) {
+            return crow::json::wvalue("Wrong username :(");
+        }
+        return crow::json::wvalue(data.dump());
             });
 
     //route for everything else/not defined
     CROW_CATCHALL_ROUTE(app)
     ([](crow::response& res) {
+        res.add_header("Content-Type", "text/plain");
         if (res.code == 404){
             res.body = "This seems to be the wrong url/endpoint.";
         }
